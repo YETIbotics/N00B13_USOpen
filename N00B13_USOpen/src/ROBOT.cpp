@@ -74,9 +74,19 @@ void ROBOT::ReadRobot()
 	State.UpdateHeading(euler.x());
 	State.Temp = bno.getTemp() * 9 / 5 + 32;
 
+	//Shift Rigth Encoder to Prev
+	State.RightEncoderPrev = State.RightEncoder;
+	State.RightEncoderPrevTime = State.RightEncoderTime;
+
 	//Get data from DriveLeftEnc
+	State.RightEncoderTime = millis();
 	State.RightEncoder = RightEnc.read();
     State.LeftEncoder = LeftEnc.read();
+
+	//Calculate Right Velocity clicks per second
+	State.DriveRightVelocity = (State.RightEncoder - State.RightEncoderPrev) / (State.RightEncoderTime - State.RightEncoderPrevTime) * 1000;
+
+
 
 	//if lift encoder is less than zero. set to zero.
 	if(LiftEnc.read() < 0)

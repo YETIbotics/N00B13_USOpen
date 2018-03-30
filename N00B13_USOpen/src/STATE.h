@@ -27,6 +27,7 @@ class STATE
 		//double Heading = 0;
 		int Temp = 0;
 
+		double DriveRightVelocity = 0;
 		double DriveRightSpeed;
 		double DriveRightSpeedPrev = 0;
 		double DriveLeftSpeed;
@@ -34,6 +35,9 @@ class STATE
 
 		double LeftEncoder;
 		double RightEncoder;
+		unsigned long RightEncoderTime=0;
+		double RightEncoderPrev=0;
+		unsigned long RightEncoderPrevTime=0;
 		bool DriveIsRunningPID = false;
 		unsigned long DriveIsRunningPIDExpiry = 0;
 

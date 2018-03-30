@@ -74,4 +74,53 @@ void MDD10A::SetMotorSpeed(int speed) {
 	analogWrite(_pinPWM, abs(speed));
 }
 
+int MDD10A::NormalizeSpeed(int speed)
+{
+	speed = abs(speed);
 
+	int retVal = 0;
+
+	if(speed > 0 && speed <= 25)
+	{
+		retVal = map(speed, 0, 25, 100, 115);
+	} 
+	else if(speed > 25 && speed <= 50)
+	{
+		retVal = map(speed, 25, 50, 115, 130);
+	}
+	else if(speed > 50 && speed <= 75)
+	{
+		retVal = map(speed, 50, 75, 130, 145);
+	}
+	else if(speed > 75 && speed <= 100)
+	{
+		retVal = map(speed, 75, 100, 145, 160);
+	}
+	else if(speed > 100 && speed <= 125)
+	{
+		retVal = map(speed, 100, 125, 160, 175);
+	}
+	else if(speed > 125 && speed <= 150)
+	{
+		retVal = map(speed, 125, 150, 175, 190);
+	}
+	else if(speed > 150 && speed <= 175)
+	{
+		retVal = map(speed, 150, 175, 190, 205);
+	}
+	else if(speed > 175 && speed <= 200)
+	{
+		retVal = map(speed, 175, 200, 205, 220);
+	}
+	else if(speed > 200 && speed <= 225)
+	{
+		retVal = map(speed, 200, 225, 220, 235);
+	}
+	else if(speed > 225 && speed <= 255)
+	{
+		retVal = map(speed, 225, 255, 235, 255);
+	}
+
+
+	return retVal;
+}

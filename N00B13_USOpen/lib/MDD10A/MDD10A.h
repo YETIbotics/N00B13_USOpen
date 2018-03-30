@@ -8,6 +8,8 @@ public:
 
 	void SetMotorSpeed(int speed);
 
+	int NormalizeSpeed(int speed);
+
 private:
 	int dir = 0;	
 
