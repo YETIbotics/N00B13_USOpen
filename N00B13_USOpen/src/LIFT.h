@@ -37,10 +37,10 @@ private:
 
 	// 0 - 1200
 	static const int SetpointFloor = 200;
-	static const int SetpointDcl = 600;
-	static const int SetpointStat = 800;
-	static const int SetpointMogo = 1200;
-	static const int SetpointBack = 500;
+	static const int SetpointDcl = 425;
+	static const int SetpointStat = 609;
+	static const int SetpointMogo = 1128;
+	static const int SetpointBack = 369;
 };
 
 #endif

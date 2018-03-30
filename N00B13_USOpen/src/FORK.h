@@ -21,15 +21,16 @@ public:
 	void Down();
 	void Toggle();
 
-	double Kp=6, Ki=0, Kd=0;
+	double Kp=10, Ki=0, Kd=0;
 
 private:
 	ROBOT &Robot;
 	PID ForkPID;
 	MDD10A ForkMotor;
 
-	double forkMax = 140;
-	double forkMin = 208;
+	double forkMax = 149;
+
+	double forkMin = 210;
 };
 
 #endif

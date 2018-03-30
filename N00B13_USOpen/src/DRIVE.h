@@ -27,8 +27,8 @@ public:
 	void SweepRelative(int deg, double speed, int timeout, bool lockLeft);
 	void SweepAbsolute(int deg, double speed, int timeout, bool lockLeft);
 	
-	double Kp=1, Ki=0, Kd=0;
-	double tKp=4, tKi=0, tKd=0;
+	double Kp=.5, Ki=0, Kd=0;
+	double tKp=3, tKi=0, tKd=0;
 
 private:
 	ROBOT &Robot;
