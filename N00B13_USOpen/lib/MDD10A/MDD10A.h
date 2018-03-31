@@ -9,6 +9,10 @@ public:
 
 	void SetMotorSpeed(int speed);
 
+	void EnableSlewRate();
+	void DisableSlewRate();
+	void SetSlewRate(int slewrate);
+
 private:
 	int dir = 0;	
 
@@ -16,6 +20,10 @@ private:
 	int _pinDIR;
 	bool _reverse;
 	int _deadZone;
+	int _slewRate = 0;
+	bool _slewEnabled = false;
+
+	int _speedPrev=0;
 };
 
 

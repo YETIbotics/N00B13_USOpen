@@ -80,6 +80,42 @@ void MDD10A::SetMotorSpeed(int speed) {
 			dir = 1;
 	}
 
+	if(_slewEnabled)
+	{
+		if (speed > _speedPrev && speed > 0)
+		{
+			//Accel
+			if (speed - _speedPrev > _slewRate)
+			{
+				speed = _speedPrev + _slewRate;	 
+			}
+		}
+		else if (speed < _speedPrev && speed < 0)
+		{
+			//Accel
+			if (abs(speed - _speedPrev) > _slewRate)
+			{
+				speed = _speedPrev - _slewRate;
+			}
+		}
+	}
+	_speedPrev = speed;
+
 	digitalWrite(_pinDIR, dir);
 	analogWrite(_pinPWM, map(abs(speed), 0, 255, _deadZone, 255));
+}
+
+
+void MDD10A::EnableSlewRate()
+{
+	_slewEnabled = true;
+}
+void MDD10A::DisableSlewRate()
+{
+	_slewEnabled = false;
+}
+void MDD10A::SetSlewRate(int slewrate)
+{
+	_slewRate = slewrate;
+	_slewEnabled = true;
 }

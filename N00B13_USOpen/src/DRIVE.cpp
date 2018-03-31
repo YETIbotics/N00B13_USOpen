@@ -17,6 +17,9 @@ void DRIVE::Setup()
 
 	DrivePID.SetOutputLimits(-100, 100);
 	TurnPID.SetOutputLimits(-100, 100);
+
+	Left.SetSlewRate(4);
+	Right.SetSlewRate(4);
 }
 
 void DRIVE::Task()
