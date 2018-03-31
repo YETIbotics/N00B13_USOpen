@@ -113,23 +113,36 @@ void AUTON::NextProgram(){
 		Robot.State.AutonomousProgramNumber = 0;
 }
 
-void AUTON::Program1()
+void AUTON::Program1() //skills auton
 {
 	switch(Robot.State.AutonomousTime)
 	{
 		case 0:
-			Robot.Drive.To(1000, 200, 1500, 0);
-			//Robot.Drive.TurnRelative(20, 100, 1000);
-			//Robot.Drive.SweepAbsolute(45, 200, 1000, false);
+			Robot.Fork.Down();
+			Robot.Drive.To(1042, 200, 1500);
 			break;
 
 		case 1500:
-			Robot.Drive.To(-1000, 200, 1500, 0);
-			//Robot.Drive.TurnRelative(-20, 100, 1000);
-			//Robot.Drive.SweepAbsolute(0, 200, 1000, false);
+			Robot.Fork.Up();
 			break;
 
-		case 4000:
+		case 2000:
+			Robot.Drive.TurnRelative(175, 200, 1500);
+			break;
+		
+		case 3000:
+			Robot.Drive.To(1022,200, 1500);
+			break;
+
+		case 4500:
+			Robot.Fork.Down();
+			break;
+
+		case 5000:
+			Robot.Drive.To(2920-3400, 200, 5000);
+			break;
+
+		case 6000:
 			Robot.State.AutonomousProgramNumber = 0;
 			break;
 	}
@@ -173,8 +186,23 @@ void AUTON::Program4(){
 	switch(Robot.State.AutonomousTime)
 	{
 		case 0:
-			Robot.State.AutonomousProgramNumber = 0;
+			Robot.Fork.Down();
+			Robot.Drive.To(1042, 200, 1500);
 			break;
+
+		case 1500:
+			Robot.Fork.Up();
+			break;
+
+		case 2000:
+			Robot.Drive.TurnRelative(175, 200, 1500);
+			break;
+		
+		case 1600:
+			Robot.Drive.To(2044, 200, 1500);
+			break;
+
+	
 	}
 }
 void AUTON::Program5(){
