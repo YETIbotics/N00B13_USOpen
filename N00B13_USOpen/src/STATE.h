@@ -95,6 +95,13 @@ class STATE
 		double Heading = 0;
 		void UpdateHeading(double newHeading);	
 
+
+		//Controller Stuff
+		double ForkSpeedCont = 0 ;
+		double LiftSpeedCont = 0;
+		double DriveLeftSpeedCont = 0;
+		double DriveRightSpeedCont = 0;
+
 	private:
 		double _gyroDegrees;
 		int _gyroRotations = 0;

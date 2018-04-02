@@ -10,6 +10,8 @@ void LIFT::Setup()
 {
 	LiftPID.SetSampleTime(Robot.State.LoopFrequency);
 	LiftPID.SetOutputLimits(-250, 250);
+
+	LiftMotor.SetSlewRate(4);
 }
 
 void LIFT::Task()

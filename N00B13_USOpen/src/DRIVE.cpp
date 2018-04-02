@@ -5,8 +5,8 @@ DRIVE::DRIVE(ROBOT &refRobot)
 	: Robot(refRobot),
 	  DrivePID(&Robot.State.DrivePIDInput, &Robot.State.DrivePIDOutput, &Robot.State.DrivePIDSetpoint, Kp, Ki, Kd, DIRECT),
 	  TurnPID(&Robot.State.Heading, &Robot.State.HeadingSpeed, &Robot.State.HeadingSetpoint, tKp, tKi, tKd, DIRECT),
-	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false),
-	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false)
+	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false, 75),
+	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false, 75)
 {
 }
 
@@ -17,6 +17,9 @@ void DRIVE::Setup()
 
 	DrivePID.SetOutputLimits(-100, 100);
 	TurnPID.SetOutputLimits(-100, 100);
+
+	Left.SetSlewRate(4);
+	Right.SetSlewRate(4);
 }
 
 void DRIVE::Task()

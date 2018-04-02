@@ -25,6 +25,7 @@ class ROBOT
 		void Setup();
 		void Loop();
 		void OI();
+		void MapOI();
 		void ReadRobot();
 
 		unsigned long lastStateUpdate;
