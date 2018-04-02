@@ -55,7 +55,7 @@ void STATE::PrintSpeeds()
 	Serial.print(DriveLeftSpeed);
 	Serial.print("\tRi: ");
 	Serial.print(DriveRightSpeed);
-	Serial.print("\RV: ");
+	Serial.print("\tRV: ");
 	Serial.print(DriveRightVelocity);
 	Serial.print("\tLi: ");
 	Serial.print(LiftSpeed);

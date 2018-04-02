@@ -46,7 +46,7 @@ void ROBOT::Loop()
 		Lift.Task();
 		Fork.Task();
 
-		State.PrintSetpoints();
+		//State.PrintSetpoints();
 
 		OI();
 
@@ -84,7 +84,8 @@ void ROBOT::ReadRobot()
     State.LeftEncoder = LeftEnc.read();
 
 	//Calculate Right Velocity clicks per second
-	State.DriveRightVelocity = (State.RightEncoder - State.RightEncoderPrev) / (State.RightEncoderTime - State.RightEncoderPrevTime) * 1000;
+	if(millis()%10 == 0)
+		State.DriveRightVelocity = (State.RightEncoder - State.RightEncoderPrev) / (State.RightEncoderTime - State.RightEncoderPrevTime) * 1000;
 
 
 
@@ -148,11 +149,11 @@ void ROBOT::OI()
 					if (Xbox.getAnalogHat(RightHatY, i) > joyThresh)
 					{
 						//RightJoystickY = 255.0 / 32767 * Xbox.getAnalogHat(RightHatY, i);
-						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), 5500, 32767, 116, 255);
+						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), 5500, 32767, 0, 255);
 					}
 					else if (Xbox.getAnalogHat(RightHatY, i) < -joyThresh)
 					{
-						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), -5500, -32767, -116, -255);
+						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), -5500, -32767, -0, -255);
 					}
 				}
 
