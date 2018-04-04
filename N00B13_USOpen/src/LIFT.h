@@ -15,6 +15,7 @@ public:
 	void Setup();
 	void Task();
 	void Write();
+	void CalcPID();
 	
 	void To(int degrees);
 

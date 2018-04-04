@@ -20,9 +20,11 @@ class STATE
 
 		void ResetSpeeds();
 
-		unsigned long LoopFrequency = 10;
+		unsigned long LoopFrequency = 20;
+		unsigned long ReadRobotFrequency = 10;
+		int PIDFrequency = 50;
 
-
+		int RumbleSpeed = 0;	
 		
 		//double Heading = 0;
 		int Temp = 0;

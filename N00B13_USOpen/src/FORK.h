@@ -15,6 +15,7 @@ public:
 	void Task();
 	void Write();
 	void Setup();
+	void CalcPID();
 
 	void To(int setpoint, int timeout);
 	void Up();

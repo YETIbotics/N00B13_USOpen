@@ -5,18 +5,24 @@ DRIVE::DRIVE(ROBOT &refRobot)
 	: Robot(refRobot),
 	  DrivePID(&Robot.State.DrivePIDInput, &Robot.State.DrivePIDOutput, &Robot.State.DrivePIDSetpoint, Kp, Ki, Kd, DIRECT),
 	  TurnPID(&Robot.State.Heading, &Robot.State.HeadingSpeed, &Robot.State.HeadingSetpoint, tKp, tKi, tKd, DIRECT),
-	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false),
-	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false)
+	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false, 50),
+	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false, 50)
 {
 }
 
 void DRIVE::Setup()
 {
-	DrivePID.SetSampleTime(100);
-	TurnPID.SetSampleTime(100);
+	DrivePID.SetSampleTime(Robot.State.PIDFrequency);
+	TurnPID.SetSampleTime(Robot.State.PIDFrequency);
 
 	DrivePID.SetOutputLimits(-100, 100);
 	TurnPID.SetOutputLimits(-100, 100);
+}
+
+void DRIVE::CalcPID()
+{
+	DrivePID.Compute();
+	TurnPID.Compute();
 }
 
 void DRIVE::Task()
@@ -33,9 +39,6 @@ void DRIVE::Task()
 			Robot.State.DrivePIDInput = Robot.State.RightEncoder;
 		}
 	}
-
-	DrivePID.Compute();
-	TurnPID.Compute();
 
 	if (Robot.State.DriveIsRunningPID)
 	{

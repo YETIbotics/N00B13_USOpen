@@ -2,20 +2,24 @@
 #include "ROBOT.h"
 
 LIFT::LIFT(ROBOT &refRobot)
-	: Robot(refRobot), LiftPID(&Robot.State.LiftEncoder, &Robot.State.LiftSpeed, &Robot.State.LiftSetpoint, Kp, Ki, Kd, DIRECT), LiftMotor(Robot.LiftPWM, Robot.LiftDir, true)
+	: Robot(refRobot), LiftPID(&Robot.State.LiftEncoder, &Robot.State.LiftSpeed, &Robot.State.LiftSetpoint, Kp, Ki, Kd, DIRECT), 
+	LiftMotor(Robot.LiftPWM, Robot.LiftDir, true, 0)
 {
 }
 
 void LIFT::Setup()
 {
-	LiftPID.SetSampleTime(10);
+	LiftPID.SetSampleTime(Robot.State.PIDFrequency);
 	LiftPID.SetOutputLimits(-250, 250);
+}
+
+void LIFT::CalcPID()
+{
+	LiftPID.Compute();
 }
 
 void LIFT::Task()
 {
-	LiftPID.Compute();
-
 	if (Robot.State.LiftIsAquiring)
 	{
 		LiftPID.SetTunings(3, 0, 0);
@@ -24,7 +28,7 @@ void LIFT::Task()
 		case 0:
 			UpdateSetpointFromState(-100);
 			break;
-		case 250:
+		case 260:
 			UpdateSetpointFromStatePartTwo(0);
 			Robot.State.LiftIsAquiring = false;
 			break;
@@ -42,10 +46,10 @@ void LIFT::Task()
 		case 0:
 			UpdateSetpointFromStatePartTwo(100);
 			break;
-		case 130:
+		case 140:
 			Robot.Hat.Release();
 			break;
-		case 250:
+		case 260:
 			UpdateSetpointFromState(0);
 			Robot.State.LiftIsReleasing = false;
 			break;

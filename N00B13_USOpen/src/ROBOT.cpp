@@ -24,21 +24,37 @@ void ROBOT::Setup()
 	Auton.Setup();
 
 	lastStateUpdate = millis();
+	lastReadRobot = millis();
 }
 
 void ROBOT::Loop()
 {
 	Usb.Task();
 
+	Drive.CalcPID();
+	Lift.CalcPID();
+	Fork.CalcPID();
 
-	if (millis() - lastStateUpdate > State.LoopFrequency)
+	if (millis() - lastReadRobot > State.ReadRobotFrequency)
 	{
-		State.ResetSpeeds();
+		lastReadRobot = millis();
 
 		//Update State Machine with Sensor Readings
 		ReadRobot();
+	}
 
-		State.PrintSensors();
+	if (millis() - lastStateUpdate > State.LoopFrequency)
+	{
+
+		//Rumble the controller with representation of how far off execution is from loopFrequency.
+		unsigned long timeSinceLastUpdate = millis() - lastStateUpdate;
+		State.RumbleSpeed = map(timeSinceLastUpdate - State.LoopFrequency, 0, 255, 0, 255);
+
+		lastStateUpdate = millis();
+
+		State.ResetSpeeds();
+
+		//State.PrintSensors();
 
 		Auton.Task();
 		Drive.Task();
@@ -60,9 +76,8 @@ void ROBOT::Loop()
 		Lift.Write();
 		Fork.Write();
 
-		Serial.println("");
+		//Serial.println("");
 
-		lastStateUpdate = millis();
 	}
 
 }
@@ -108,6 +123,18 @@ void ROBOT::OI()
 		{
 			if (Xbox.Xbox360Connected[i])
 			{
+				
+				if(State.RumbleSpeed > 0 && CurRumbleSpeed != State.RumbleSpeed)
+				{
+          			Xbox.setRumbleOn(State.RumbleSpeed, State.RumbleSpeed, i);
+					CurRumbleSpeed = State.RumbleSpeed;
+				}
+				else if(State.RumbleSpeed == 0 && CurRumbleSpeed != State.RumbleSpeed)
+				{
+					Xbox.setRumbleOff(i);
+					CurRumbleSpeed = State.RumbleSpeed;
+				}
+
 				//L2 Trigger
 				if (Xbox.getButtonPress(R2, i))
 				{

@@ -27,7 +27,7 @@ private:
 	static const int OpenPos = 20;
 	static const int ClosedPos = 160;
 
-	static const int ReleaseDuration = 150;
+	static const int ReleaseDuration = 160;
 };
 
 #endif

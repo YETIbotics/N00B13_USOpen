@@ -4,22 +4,24 @@
 FORK::FORK(ROBOT &refRobot)
 	: Robot(refRobot),
 	ForkPID(&Robot.State.FlexSensor, &Robot.State.ForkSpeed, &Robot.State.ForkPIDSetpoint, Kp, Ki, Kd, DIRECT),
-	ForkMotor(Robot.ForkPWM, Robot.ForkDir, true)
+	ForkMotor(Robot.ForkPWM, Robot.ForkDir, true, 0)
 { 
  
 }
 
 void FORK::Setup(){ 
  
-	ForkPID.SetSampleTime(50);
+	ForkPID.SetSampleTime(Robot.State.PIDFrequency);
 	
 	ForkPID.SetOutputLimits(-255, 255);
 }
+
+void FORK::CalcPID()
+{
+	ForkPID.Compute();
+}
  
 void FORK::Task() {
-
-	ForkPID.Compute();
-
 	if (Robot.State.ForkIsRunningPID)
 	{
 		//Handle Timeout

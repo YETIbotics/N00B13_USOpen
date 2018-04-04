@@ -5,8 +5,8 @@ ROBOT Robot;
 
 void setup()
 {
-	Serial.begin(115200);
-	Serial.println("Initialized!");
+	//Serial.begin(115200);
+	//Serial.println("Initialized!");
 
 	Robot.Setup();
 }

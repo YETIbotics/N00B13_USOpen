@@ -28,6 +28,9 @@ class ROBOT
 		void ReadRobot();
 
 		unsigned long lastStateUpdate;
+		unsigned long lastReadRobot;
+
+		int CurRumbleSpeed = 0;
 
 		USB Usb;
 		XBOXRECV Xbox;

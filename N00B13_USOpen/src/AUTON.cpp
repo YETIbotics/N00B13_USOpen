@@ -255,7 +255,6 @@ void AUTON::Program5(){
 	}
 }
 void AUTON::Program6(){
-	Serial.println(Robot.State.AutonomousTime);
 	switch(Robot.State.AutonomousTime)
 	{	
 		case 0:

@@ -2,10 +2,11 @@
 #include "MDD10A.h"
 #include <Arduino.h>
 
-MDD10A::MDD10A(int pinpwm, int pindir, bool reversed) {
+MDD10A::MDD10A(int pinpwm, int pindir, bool reversed, int deadzone) {
 	_pinPWM = pinpwm;
 	_pinDIR = pindir;
 	_reverse = reversed;
+	_deadZone = deadzone;
 
 	/*
 	prescaler = 1 ---> PWM frequency is 31000 Hz
@@ -74,7 +75,7 @@ void MDD10A::SetMotorSpeed(int speed) {
 	if(speed == 0)
 		analogWrite(_pinPWM, 0);
 	else
-		analogWrite(_pinPWM, map(abs(speed), 1, 255, 50, 255));
+		analogWrite(_pinPWM, map(abs(speed), 1, 255, _deadZone, 255));
 }
 
 int MDD10A::NormalizeSpeed(int speed)
