@@ -30,7 +30,7 @@ private:
 
 	double forkMax = 240;
 
-	double forkMin = 267;
+	double forkMin = 275;
 };
 
 #endif

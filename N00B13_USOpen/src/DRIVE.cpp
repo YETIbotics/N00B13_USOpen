@@ -5,21 +5,18 @@ DRIVE::DRIVE(ROBOT &refRobot)
 	: Robot(refRobot),
 	  DrivePID(&Robot.State.DrivePIDInput, &Robot.State.DrivePIDOutput, &Robot.State.DrivePIDSetpoint, Kp, Ki, Kd, DIRECT),
 	  TurnPID(&Robot.State.Heading, &Robot.State.HeadingSpeed, &Robot.State.HeadingSetpoint, tKp, tKi, tKd, DIRECT),
-	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false, 75),
-	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false, 75)
+	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false),
+	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false)
 {
 }
 
 void DRIVE::Setup()
 {
-	DrivePID.SetSampleTime(Robot.State.LoopFrequency);
-	TurnPID.SetSampleTime(Robot.State.LoopFrequency);
+	DrivePID.SetSampleTime(100);
+	TurnPID.SetSampleTime(100);
 
 	DrivePID.SetOutputLimits(-100, 100);
 	TurnPID.SetOutputLimits(-100, 100);
-
-	Left.SetSlewRate(4);
-	Right.SetSlewRate(4);
 }
 
 void DRIVE::Task()
@@ -118,6 +115,7 @@ void DRIVE::Task()
 			Robot.State.DriveIsRunningPID = false;
 			DrivePID.SetMode(MANUAL);
 			TurnPID.SetMode(MANUAL);
+			
 		}
 	}
 }
@@ -139,6 +137,7 @@ void DRIVE::To(int setpoint, double speed, int timeout)
 
 void DRIVE::To(int setpoint, double speed, int timeout, int heading)
 {
+	TurnPID.SetTunings(6, 0, 0);
 	Robot.State.DriveIsRunningPID = true;
 	Robot.State.DriveIsRunningPIDExpiry = millis() + timeout;
 
@@ -164,6 +163,7 @@ void DRIVE::To(int setpoint, double speed, int timeout, int heading)
 
 void DRIVE::TurnRelative(int deg, double speed, int timeout)
 {
+	TurnPID.SetTunings(tKp, tKi, tKd);
 	// no rigthpid or leftpid
 	//TurnPid on
 	//write opposite values to left and right
@@ -172,6 +172,7 @@ void DRIVE::TurnRelative(int deg, double speed, int timeout)
 }
 void DRIVE::TurnAbsolute(int deg, double speed, int timeout)
 {
+	TurnPID.SetTunings(tKp, tKi, tKd);
 	// no rigthpid or leftpid
 	//TurnPid on
 	//write opposite values to left and right
@@ -194,6 +195,7 @@ void DRIVE::TurnAbsolute(int deg, double speed, int timeout)
 }
 void DRIVE::SweepRelative(int deg, double speed, int timeout, bool lockLeft)
 {
+	TurnPID.SetTunings(tKp, tKi, tKd);
 	// right pid OR left pid with setpoint of zero
 	//TurnPid on
 	//if right is on, write speed to left
@@ -201,6 +203,7 @@ void DRIVE::SweepRelative(int deg, double speed, int timeout, bool lockLeft)
 }
 void DRIVE::SweepAbsolute(int deg, double speed, int timeout, bool lockLeft)
 {
+	TurnPID.SetTunings(tKp, tKi, tKd);
 	// right pid OR left pid with setpoint of zero
 	//TurnPid on
 	//if right is on, write speed to left

@@ -72,7 +72,7 @@ void AUTON::Task() {
 		}
 
 		if(Robot.State.IsAutonomousRunning)
-			Robot.State.AutonomousTime += Robot.State.LoopFrequency;
+			Robot.State.AutonomousTime = ((millis() - Robot.State.AutonStartTime) / 100) * 100;
 		else
 			Robot.State.AutonomousTime = 0;
 	}
@@ -91,7 +91,8 @@ void AUTON::StartAutonomous()
 void AUTON::StartAutonomous(int progNum)
 {
 	Robot.State.AutonomousProgramNumber = progNum;
-	Robot.State.AutonomousTime = 0;
+	Robot.State.AutonStartTime = millis();
+	Robot.State.AutonomousTime =  0;
 	Robot.State.IsAutonomousRunning = true;
 }
 
@@ -254,96 +255,97 @@ void AUTON::Program5(){
 	}
 }
 void AUTON::Program6(){
+	Serial.println(Robot.State.AutonomousTime);
 	switch(Robot.State.AutonomousTime)
 	{	
 		case 0:
-			Robot.Drive.To(1420, 175, 2000);
-			Robot.Lift.To(1000);
+			Robot.Drive.To(1420, 220, 3000,0);
+			//Robot.Lift.To(500);
 			break;
 
-		case 2000:
+		case 3000:
 			Robot.Fork.Up();
 			break;
 
-		case 2500:
-			Robot.Drive.To(-1250, 175, 2000);
-			break;
-
-		case 4500:
-			Robot.Drive.TurnRelative(-213, 150, 2000);
-			break;
-
-
-		case 6500:
-			Robot.Drive.To(400, 200, 1500);
-			break;
-
-		case 8500:
-			Robot.Fork.Down();
+		case 6000:
+			Robot.Drive.To(-1250, 220, 3000,10);
 			break;
 
 		case 9000:
-			Robot.Drive.To(-360, 200, 2000);
+			Robot.Drive.TurnAbsolute(-210, 150, 3000);
 			break;
 
-		case 9500:
-			Robot.Drive.TurnRelative(-205, 150, 2000);
-			break;
-
-		case 10500:
-			Robot.Drive.To(540, 200, 2000);
-			break;
-
-		case 11000:
-			Robot.Fork.Up();
-			break;
-
-		case 11500:
-			Robot.Drive.To(-600, 200, 2000);
-			break;
 
 		case 12000:
-			Robot.Drive.TurnRelative(-111, 150, 2000);
-			break;
-
-		case 12500:
-			Robot.Drive.To(510, 200, 2000);
-			break;
-
-		case 13500:
-			Robot.Drive.TurnRelative(-80.43, 150, 2000);
-			break;
-
-		case 14000:
-			Robot.Fork.Down();
-			break;
-
-		case 14500:
-			Robot.Drive.To(60, 200, 2000);
+			Robot.Drive.To(500, 220, 3000);
 			break;
 
 		case 15000:
-			Robot.Drive.To(-295, 200, 2000);
+			Robot.Fork.Down();
+			break;
+
+		case 18000:
+			Robot.Drive.To(-360, 220, 3000);
+			break;
+
+		case 21000:
+			Robot.Drive.TurnAbsolute(-60, 200, 3000);
+			break;
+
+		case 24000:
+			Robot.Drive.To(600, 220, 3000);
+			break;
+
+		case 27000:
+			Robot.Fork.Up();
+			break;
+
+		case 30000:
+			Robot.Drive.To(-630, 220, 3000);
+			break;
+
+		case 33000:
+			Robot.Drive.TurnAbsolute(-171, 150, 3000);
+			break;
+
+		case 36000:
+			Robot.Drive.To(530, 220, 3000);
+			break;
+
+		case 39000:
+			Robot.Drive.TurnAbsolute(-240, 150, 3000);
+			break;
+
+		case 42000:
+			Robot.Drive.To(220, 220, 3000);
+			break;
+
+		case 45000:
+			Robot.Fork.Down();
+			break;
+
+		case 48000:
+			Robot.Drive.To(-295, 220, 3000);
 			break;
 
 
-		case 15500:
-			Robot.Drive.TurnRelative(80, 150, 2000);
+		case 51000:
+			Robot.Drive.TurnAbsolute(-150, 200, 3000);
 			break;
 
-		case 16500:
-			Robot.Drive.To(950, 200, 2000);
+		case 54000:
+			Robot.Drive.To(550, 200, 3000);
 			break;
 
-		case 17000:
-			Robot.Drive.TurnRelative(45, 150, 2000);
+		case 57000:
+			Robot.Drive.TurnAbsolute(-45, 200, 3000);
 			break;
 
-		case 17500:
-			Robot.Drive.To(1200, 200, 2000);
+		case 60000:
+			Robot.Drive.To(600, 200, 3000);
 			break;
 
-		case 18500:
+		case 63000:
 			Robot.Fork.Up();
 			break;
 
@@ -422,6 +424,17 @@ void AUTON::Program15(){
 	switch(Robot.State.AutonomousTime)
 	{
 		case 0:
+			Robot.Drive.TurnAbsolute(90, 200, 3000);
+			break;
+		case 3000:
+			Robot.Drive.TurnAbsolute(-90, 200, 3000);
+			break;
+
+		case 6000:
+			Robot.Drive.TurnAbsolute(0, 200, 3000);
+			break;
+
+		case 9000:
 			Robot.State.AutonomousProgramNumber = 0;
 			break;
 	}

@@ -29,7 +29,7 @@ void ROBOT::Setup()
 void ROBOT::Loop()
 {
 	Usb.Task();
-	OI();
+
 
 	if (millis() - lastStateUpdate > State.LoopFrequency)
 	{
@@ -48,7 +48,7 @@ void ROBOT::Loop()
 
 		//State.PrintSetpoints();
 
-		MapOI();
+		OI();
 
 		//State.PrintSpeeds();
 
@@ -100,17 +100,6 @@ void ROBOT::ReadRobot()
 	
 }
 
-void ROBOT::MapOI(){
-	if(State.ForkSpeedCont != 0)
-		State.ForkSpeed = State.ForkSpeedCont;
-	if(State.LiftSpeedCont != 0)
-		State.LiftSpeed = State.LiftSpeedCont;
-	if(State.DriveLeftSpeedCont != 0)
-		State.DriveLeftSpeed = State.DriveLeftSpeedCont;
-	if(State.DriveRightSpeedCont != 0)
-		State.DriveRightSpeed = State.DriveRightSpeedCont;
-}
-
 void ROBOT::OI()
 {
 	if (Xbox.XboxReceiverConnected)
@@ -122,35 +111,26 @@ void ROBOT::OI()
 				//L2 Trigger
 				if (Xbox.getButtonPress(R2, i))
 				{
-					State.LiftSpeedCont = Xbox.getButtonPress(R2, i) * 1 * .5;
+					State.LiftSpeed = Xbox.getButtonPress(R2, i) * 1 * .5;
 				}
 				//R2 Trigger
 				else if (Xbox.getButtonPress(L2, i))
 				{
-					State.LiftSpeedCont = Xbox.getButtonPress(L2, i) * -1 * .5;
-				}
-				else
-				{
-					State.LiftSpeedCont = 0;
+					State.LiftSpeed = Xbox.getButtonPress(L2, i) * -1 * .5;
 				}
 
 				//L1 Button
 				if (Xbox.getButtonPress(R1, i))
 				{
-					State.ForkSpeedCont = 255.0;
+					State.ForkSpeed = 255.0;
 				}
 				//R1 Button
 				else if (Xbox.getButtonPress(L1, i))
 				{
-					State.ForkSpeedCont = -255.0;
-				}
-				else
-				{
-					State.ForkSpeedCont = 0;
+					State.ForkSpeed = -255.0;
 				}
 
 				const int joyThresh = 5500;
-				const int MCDeadZone = 0; //116
 				if (Xbox.getAnalogHat(LeftHatX, i) > joyThresh || Xbox.getAnalogHat(LeftHatX, i) < -joyThresh || Xbox.getAnalogHat(LeftHatY, i) > joyThresh || Xbox.getAnalogHat(LeftHatY, i) < -joyThresh || Xbox.getAnalogHat(RightHatX, i) > joyThresh || Xbox.getAnalogHat(RightHatX, i) < -joyThresh || Xbox.getAnalogHat(RightHatY, i) > joyThresh || Xbox.getAnalogHat(RightHatY, i) < -joyThresh)
 				{
 					
@@ -158,38 +138,22 @@ void ROBOT::OI()
 					if (Xbox.getAnalogHat(LeftHatY, i) > joyThresh)
 					{
 						//LeftJoystickY = 255.0 / 32767 * Xbox.getAnalogHat(LeftHatY, i);
-						State.DriveLeftSpeedCont = map(Xbox.getAnalogHat(LeftHatY, i), 5500, 32767, MCDeadZone, 255);
+						State.DriveLeftSpeed = map(Xbox.getAnalogHat(LeftHatY, i), 5500, 32767, 0, 255);
 					}
 					else if (Xbox.getAnalogHat(LeftHatY, i) < -joyThresh)
 					{
-						State.DriveLeftSpeedCont = map(Xbox.getAnalogHat(LeftHatY, i), -5500, -32767, -MCDeadZone, -255);
-					}
-					else
-					{
-						State.DriveLeftSpeedCont = 0;
+						State.DriveLeftSpeed = map(Xbox.getAnalogHat(LeftHatY, i), -5500, -32767, -0, -255);
 					}
 
 				
 					if (Xbox.getAnalogHat(RightHatY, i) > joyThresh)
 					{
 						//RightJoystickY = 255.0 / 32767 * Xbox.getAnalogHat(RightHatY, i);
-<<<<<<< HEAD
 						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), 5500, 32767, 0, 255);
 					}
 					else if (Xbox.getAnalogHat(RightHatY, i) < -joyThresh)
 					{
 						State.DriveRightSpeed = map(Xbox.getAnalogHat(RightHatY, i), -5500, -32767, -0, -255);
-=======
-						State.DriveRightSpeedCont = map(Xbox.getAnalogHat(RightHatY, i), 5500, 32767, MCDeadZone, 255);
-					}
-					else if (Xbox.getAnalogHat(RightHatY, i) < -joyThresh)
-					{
-						State.DriveRightSpeedCont = map(Xbox.getAnalogHat(RightHatY, i), -5500, -32767, -MCDeadZone, -255);
-					}
-					else
-					{
-						State.DriveRightSpeedCont = 0;
->>>>>>> 3d10951877b539a983ba4f3a8009124b9f65444d
 					}
 				}
 
@@ -263,11 +227,97 @@ void ROBOT::OI()
 
 					if((pn / 8) % 2 > 0)
 						Xbox.setLedOn(LED4, i);
+
+						//Xbox.setLedOff(i);
 				}
 				else
 				{
 					Xbox.setLedOn(LED1, i);
+					//Xbox.setLedOn(LED2, i);
+					//Xbox.setLedBlink(ALL, i);
 				}
+				
+
+				//Serial.println(Xbox.getAnalogHat(RightHatY, i));
+
+				//if (Xbox.getButtonPress(X, i))
+				//{
+					//DOWN
+				//	ArmSpeed = -80;
+				//}
+				//else if (Xbox.getButtonPress(Y, i))
+				//{
+					//UP
+				//	ArmSpeed = 200;
+				//}
+
+				//if (Xbox.getButtonPress(L1, i))
+				//{
+					//OPEN
+				//	ClawSpeed = 225;
+				//}
+				//else if (Xbox.getButtonPress(R1, i))
+				//{
+					//CLOSE
+				//	ClawSpeed = -225;
+				//}
+
+				
+
+				//if (Xbox.getButtonClick(START, i))
+				//{
+				//	isArcadeDrive = !isArcadeDrive;
+				//}
+
+				// if (Xbox.getButtonClick(BACK, i))
+				// {// parking match
+
+				// 	mc.setMotorSpeed(4, 255); //rt
+				// 	mc.setMotorSpeed(5, 255); //lt
+				// 	delay(100);
+
+				// 	mc.setMotorSpeed(4, 0); //rt
+				// 	mc.setMotorSpeed(5, 0); //lt
+				// 	delay(2000);
+
+				// 	mc.setMotorSpeed(4, 255); //rt
+				// 	mc.setMotorSpeed(5, 255); //lt
+				// 	delay(1000);
+				// }
+
+				
+
+				// if (Xbox.getButtonClick(UP, i))
+				// {// 20 pt scoring
+				// 	//match park
+				// 	(600);
+				// 	MOGO(0);
+
+				// 	Drive(0,0);
+				// 	delay(500);
+				
+				// 	Drive(200,200);
+				// 	delay(1400);
+				// 	Drive(0,0);
+
+					
+					
+				// 	//Drive(255,255);
+				// 	//delay(700);
+				// 	//Drive(0,0);
+				
+
+				// 	//Drive(-255,-255);
+				// 	//delay(700);
+				// 	//Drive(0,0);
+				// }
+			
+			
+
+
+
+
+
 				
 			}
 		}

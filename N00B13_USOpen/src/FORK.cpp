@@ -11,7 +11,7 @@ FORK::FORK(ROBOT &refRobot)
 
 void FORK::Setup(){ 
  
-	ForkPID.SetSampleTime(Robot.State.LoopFrequency);
+	ForkPID.SetSampleTime(50);
 	
 	ForkPID.SetOutputLimits(-255, 255);
 }
