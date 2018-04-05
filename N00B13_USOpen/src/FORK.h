@@ -29,9 +29,9 @@ private:
 	PID ForkPID;
 	MDD10A ForkMotor;
 
-	double forkMax = 240;
+	double forkMax = 195;
 
-	double forkMin = 275;
+	double forkMin = 270;
 };
 
 #endif

@@ -2,7 +2,7 @@
 #include "ROBOT.h"
 
 LIFT::LIFT(ROBOT &refRobot)
-	: Robot(refRobot), LiftPID(&Robot.State.LiftEncoder, &Robot.State.LiftSpeed, &Robot.State.LiftSetpoint, Kp, Ki, Kd, DIRECT), 
+	: Robot(refRobot), LiftPID(&Robot.State.LiftEncoder, &Robot.State.LiftSpeedPID, &Robot.State.LiftSetpoint, Kp, Ki, Kd, DIRECT), 
 	LiftMotor(Robot.LiftPWM, Robot.LiftDir, true, 0)
 {
 }
@@ -16,6 +16,7 @@ void LIFT::Setup()
 void LIFT::CalcPID()
 {
 	LiftPID.Compute();
+	//Serial.println(Robot.State.LiftSpeed);
 }
 
 void LIFT::Task()
@@ -69,29 +70,30 @@ void LIFT::Task()
 	{
 		double accelLimit = 8;
 
-		if (Robot.State.LiftSpeed > Robot.State.LiftSpeedPrev && Robot.State.LiftSpeed > 0)
+		if (Robot.State.LiftSpeedPID > Robot.State.LiftSpeedPrev && Robot.State.LiftSpeedPID > 0)
 		{
 			//Accel
-			if (Robot.State.LiftSpeed - Robot.State.LiftSpeedPrev > accelLimit)
+			if (Robot.State.LiftSpeedPID - Robot.State.LiftSpeedPrev > accelLimit)
 			{
-				Robot.State.LiftSpeed = Robot.State.LiftSpeedPrev + accelLimit;	
+				Robot.State.LiftSpeedPID = Robot.State.LiftSpeedPrev + accelLimit;	
 			}
 		}
-		else if (Robot.State.LiftSpeed < Robot.State.LiftSpeedPrev && Robot.State.LiftSpeed < 0)
+		else if (Robot.State.LiftSpeedPID < Robot.State.LiftSpeedPrev && Robot.State.LiftSpeedPID < 0)
 		{
 			//Accel
-			if (abs(Robot.State.LiftSpeed - Robot.State.LiftSpeedPrev) > accelLimit)
+			if (abs(Robot.State.LiftSpeedPID - Robot.State.LiftSpeedPrev) > accelLimit)
 			{
-				Robot.State.LiftSpeed = Robot.State.LiftSpeedPrev - accelLimit;
+				Robot.State.LiftSpeedPID = Robot.State.LiftSpeedPrev - accelLimit;
 			}
 		}
-		Robot.State.LiftSpeedPrev = Robot.State.LiftSpeed;
+		Robot.State.LiftSpeedPrev = Robot.State.LiftSpeedPID;
 
 		//Handle Timeout
 		if (millis() > Robot.State.LiftIsRunningPIDExpiry)
 		{
 			Robot.State.LiftIsRunningPID = false;
 			LiftPID.SetMode(MANUAL);
+			Robot.State.LiftSpeedPID = 0;
 		}
 	}
 }
@@ -99,7 +101,7 @@ void LIFT::Task()
 void LIFT::Write()
 {
 
-	LiftMotor.SetMotorSpeed(Robot.State.LiftSpeed);
+	LiftMotor.SetMotorSpeed(Robot.State.LiftSpeed + Robot.State.LiftSpeedPID);
 }
 
 void LIFT::UpdateSetpointFromState(int bonusclicks)

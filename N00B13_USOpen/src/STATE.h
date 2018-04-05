@@ -20,6 +20,8 @@ class STATE
 
 		void ResetSpeeds();
 
+		bool IsLiftTriggers = false;
+
 		unsigned long LoopFrequency = 20;
 		unsigned long ReadRobotFrequency = 10;
 		int PIDFrequency = 50;
@@ -31,8 +33,10 @@ class STATE
 
 		double DriveRightVelocity = 0;
 		double DriveRightSpeed;
+		//double DriveRightSpeedPID = 0;
 		double DriveRightSpeedPrev = 0;
 		double DriveLeftSpeed;
+		//double DriveLeftSpeedPID = 0;
 		double DriveLeftSpeedPrev = 0;
 
 		double LeftEncoder;
@@ -53,6 +57,7 @@ class STATE
 		bool TurnPIDIsHeadingLock;
 
 		double ForkSpeed;
+		double ForkSpeedPID=0;
 		double FlexSensor;
 		double ForkPIDSetpoint = 0;
 		bool ForkIsRunningPID = false;
@@ -68,10 +73,14 @@ class STATE
 		enum HATSTATES HatState;
 		bool HatIsReleasing = false;
 		int HatIsReleasingTime = 0;
+
+		bool HatIsMoving = false;
+		int HatIsMovingTime = 0;
 		
 		//LIFT Class States
 		double LiftEncoder;
 		double LiftSpeed;
+		double LiftSpeedPID = 0;
 		double LiftSpeedPrev = 0;
 		double LiftSetpoint;
 		enum LIFTSTATES {

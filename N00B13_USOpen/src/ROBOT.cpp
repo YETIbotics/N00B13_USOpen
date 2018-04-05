@@ -1,23 +1,19 @@
 
 #include "ROBOT.h"
 
-ROBOT::ROBOT() :Xbox(&Usb), Drive(*this), Hat(*this), Lift(*this), Fork(*this), Auton(*this)
-	, RightEnc(RightEncInt, RightEncDig)
-	, LeftEnc(LeftEncInt, LeftEncDig)
-	, LiftEnc(LiftEncInt, LiftEncDig)
-	
-{
+ROBOT::ROBOT() : Xbox(&Usb), Drive(*this), Hat(*this), Lift(*this), Fork(*this), Auton(*this), RightEnc(RightEncInt, RightEncDig), LeftEnc(LeftEncInt, LeftEncDig), LiftEnc(LiftEncInt, LiftEncDig)
 
+{
 }
 
 void ROBOT::Setup()
 {
-	Usb.Init(); 
+	Usb.Init();
 
 	bno.begin();
 	bno.setExtCrystalUse(true);
 
-	Drive.Setup(); 
+	Drive.Setup();
 	Hat.Setup();
 	Lift.Setup();
 	Fork.Setup();
@@ -54,7 +50,7 @@ void ROBOT::Loop()
 
 		State.ResetSpeeds();
 
-		//State.PrintSensors();
+		State.PrintSensors();
 
 		Auton.Task();
 		Drive.Task();
@@ -71,15 +67,13 @@ void ROBOT::Loop()
 		//State.PrintLift();
 
 		Auton.Write();
-		Drive.Write(); 
+		Drive.Write();
 		Hat.Write();
 		Lift.Write();
 		Fork.Write();
 
-		//Serial.println("");
-
+		Serial.println("");
 	}
-
 }
 
 void ROBOT::ReadRobot()
@@ -96,23 +90,19 @@ void ROBOT::ReadRobot()
 	//Get data from DriveLeftEnc
 	State.RightEncoderTime = millis();
 	State.RightEncoder = RightEnc.read();
-    State.LeftEncoder = LeftEnc.read();
+	State.LeftEncoder = LeftEnc.read();
 
 	//Calculate Right Velocity clicks per second
-	if(millis()%10 == 0)
+	if (millis() % 10 == 0)
 		State.DriveRightVelocity = (State.RightEncoder - State.RightEncoderPrev) / (State.RightEncoderTime - State.RightEncoderPrevTime) * 1000;
 
-
-
 	//if lift encoder is less than zero. set to zero.
-	if(LiftEnc.read() < 0)
+	if (LiftEnc.read() < 0)
 		LiftEnc.write(0);
 
-    State.LiftEncoder = LiftEnc.read();
-	
+	State.LiftEncoder = LiftEnc.read();
 
 	State.FlexSensor = analogRead(FlexSensor);
-	
 }
 
 void ROBOT::OI()
@@ -123,44 +113,70 @@ void ROBOT::OI()
 		{
 			if (Xbox.Xbox360Connected[i])
 			{
-				
-				if(State.RumbleSpeed > 0 && CurRumbleSpeed != State.RumbleSpeed)
+
+				if (State.RumbleSpeed > 0 && CurRumbleSpeed != State.RumbleSpeed)
 				{
-          			Xbox.setRumbleOn(State.RumbleSpeed, State.RumbleSpeed, i);
+					Xbox.setRumbleOn(State.RumbleSpeed, State.RumbleSpeed, i);
 					CurRumbleSpeed = State.RumbleSpeed;
 				}
-				else if(State.RumbleSpeed == 0 && CurRumbleSpeed != State.RumbleSpeed)
+				else if (State.RumbleSpeed == 0 && CurRumbleSpeed != State.RumbleSpeed)
 				{
 					Xbox.setRumbleOff(i);
 					CurRumbleSpeed = State.RumbleSpeed;
 				}
 
-				//L2 Trigger
-				if (Xbox.getButtonPress(R2, i))
+				if (State.IsLiftTriggers)
 				{
-					State.LiftSpeed = Xbox.getButtonPress(R2, i) * 1 * .5;
-				}
-				//R2 Trigger
-				else if (Xbox.getButtonPress(L2, i))
-				{
-					State.LiftSpeed = Xbox.getButtonPress(L2, i) * -1 * .5;
-				}
+					//L2 Trigger
+					if (Xbox.getButtonPress(R2, i))
+					{
+						State.LiftSpeed = Xbox.getButtonPress(R2, i) * 1 * .5;
+					}
+					//R2 Trigger
+					else if (Xbox.getButtonPress(L2, i))
+					{
+						State.LiftSpeed = Xbox.getButtonPress(L2, i) * -1 * .5;
+					}
 
-				//L1 Button
-				if (Xbox.getButtonPress(R1, i))
-				{
-					State.ForkSpeed = 255.0;
+					//L1 Button
+					if (Xbox.getButtonPress(R1, i))
+					{
+						State.ForkSpeed = 255.0;
+					}
+					//R1 Button
+					else if (Xbox.getButtonPress(L1, i))
+					{
+						State.ForkSpeed = -255.0;
+					}
 				}
-				//R1 Button
-				else if (Xbox.getButtonPress(L1, i))
+				else
 				{
-					State.ForkSpeed = -255.0;
+					//L2 Trigger
+					if (Xbox.getButtonPress(R2, i))
+					{
+						State.ForkSpeed = Xbox.getButtonPress(R2, i) * 1;
+					}
+					//R2 Trigger
+					else if (Xbox.getButtonPress(L2, i))
+					{
+						State.ForkSpeed = Xbox.getButtonPress(L2, i) * -1;
+					}
+
+					//L1 Button
+					if (Xbox.getButtonPress(R1, i))
+					{
+						State.LiftSpeed = 128.0;
+					}
+					//R1 Button
+					else if (Xbox.getButtonPress(L1, i))
+					{
+						State.LiftSpeed = -128.0;
+					}
 				}
 
 				const int joyThresh = 5500;
 				if (Xbox.getAnalogHat(LeftHatX, i) > joyThresh || Xbox.getAnalogHat(LeftHatX, i) < -joyThresh || Xbox.getAnalogHat(LeftHatY, i) > joyThresh || Xbox.getAnalogHat(LeftHatY, i) < -joyThresh || Xbox.getAnalogHat(RightHatX, i) > joyThresh || Xbox.getAnalogHat(RightHatX, i) < -joyThresh || Xbox.getAnalogHat(RightHatY, i) > joyThresh || Xbox.getAnalogHat(RightHatY, i) < -joyThresh)
 				{
-					
 
 					if (Xbox.getAnalogHat(LeftHatY, i) > joyThresh)
 					{
@@ -172,7 +188,6 @@ void ROBOT::OI()
 						State.DriveLeftSpeed = map(Xbox.getAnalogHat(LeftHatY, i), -5500, -32767, -0, -255);
 					}
 
-				
 					if (Xbox.getAnalogHat(RightHatY, i) > joyThresh)
 					{
 						//RightJoystickY = 255.0 / 32767 * Xbox.getAnalogHat(RightHatY, i);
@@ -214,48 +229,58 @@ void ROBOT::OI()
 					Lift.Next();
 				}
 
-				if(Xbox.getButtonClick(START, i))
+				if(Xbox.getButtonClick(A, i))
 				{
-					Auton.NextProgram(); 
+					State.IsLiftTriggers = !State.IsLiftTriggers;
 				}
 
-				if(Xbox.getButtonClick(SELECT, i))
+				if (Xbox.getButtonClick(START, i))
+				{
+					Auton.NextProgram();
+				}
+
+				if (Xbox.getButtonClick(SELECT, i))
 				{
 					Auton.PreviousProgram();
 				}
 
-				if(Xbox.getButtonClick(XBOX, i))
-				{ 
-					if(State.IsAutonomousRunning)
+				if (Xbox.getButtonClick(XBOX, i))
+				{
+					if (State.IsAutonomousRunning)
 						Auton.StopAutonomous();
 					else
 						Auton.StartAutonomous();
 				}
+					// Deploy button
+				if (Xbox.getButtonClick(B, i))
+				{
+					State.AutonomousProgramNumber = 12;
+					Auton.StartAutonomous();
+				}
 
-
-				if(State.IsAutonomousRunning)
+				if (State.IsAutonomousRunning)
 				{
 					Xbox.setLedMode(ALTERNATING, i);
 				}
-				else if(State.AutonomousProgramNumber > 0)
+				else if (State.AutonomousProgramNumber > 0)
 				{
 					//Decode prog number
 					int pn = State.AutonomousProgramNumber;
 					Xbox.setLedOff(i);
 
-					if(pn % 2 > 0)
+					if (pn % 2 > 0)
 						Xbox.setLedOn(LED1, i);
-					
-					if((pn / 2) % 2 > 0)
+
+					if ((pn / 2) % 2 > 0)
 						Xbox.setLedOn(LED2, i);
 
-					if((pn / 4) % 2 > 0)
+					if ((pn / 4) % 2 > 0)
 						Xbox.setLedOn(LED3, i);
 
-					if((pn / 8) % 2 > 0)
+					if ((pn / 8) % 2 > 0)
 						Xbox.setLedOn(LED4, i);
 
-						//Xbox.setLedOff(i);
+					//Xbox.setLedOff(i);
 				}
 				else
 				{
@@ -263,33 +288,30 @@ void ROBOT::OI()
 					//Xbox.setLedOn(LED2, i);
 					//Xbox.setLedBlink(ALL, i);
 				}
-				
 
 				//Serial.println(Xbox.getAnalogHat(RightHatY, i));
 
 				//if (Xbox.getButtonPress(X, i))
 				//{
-					//DOWN
+				//DOWN
 				//	ArmSpeed = -80;
 				//}
 				//else if (Xbox.getButtonPress(Y, i))
 				//{
-					//UP
+				//UP
 				//	ArmSpeed = 200;
 				//}
 
 				//if (Xbox.getButtonPress(L1, i))
 				//{
-					//OPEN
+				//OPEN
 				//	ClawSpeed = 225;
 				//}
 				//else if (Xbox.getButtonPress(R1, i))
 				//{
-					//CLOSE
+				//CLOSE
 				//	ClawSpeed = -225;
 				//}
-
-				
 
 				//if (Xbox.getButtonClick(START, i))
 				//{
@@ -312,8 +334,6 @@ void ROBOT::OI()
 				// 	delay(1000);
 				// }
 
-				
-
 				// if (Xbox.getButtonClick(UP, i))
 				// {// 20 pt scoring
 				// 	//match park
@@ -322,30 +342,19 @@ void ROBOT::OI()
 
 				// 	Drive(0,0);
 				// 	delay(500);
-				
+
 				// 	Drive(200,200);
 				// 	delay(1400);
 				// 	Drive(0,0);
 
-					
-					
 				// 	//Drive(255,255);
 				// 	//delay(700);
 				// 	//Drive(0,0);
-				
 
 				// 	//Drive(-255,-255);
 				// 	//delay(700);
 				// 	//Drive(0,0);
 				// }
-			
-			
-
-
-
-
-
-				
 			}
 		}
 	}

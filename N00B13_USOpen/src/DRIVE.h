@@ -28,8 +28,8 @@ public:
 	void SweepRelative(int deg, double speed, int timeout, bool lockLeft);
 	void SweepAbsolute(int deg, double speed, int timeout, bool lockLeft);
 	
-	double Kp=.17, Ki=0, Kd=0;
-	double tKp=1.07, tKi=0, tKd=0;
+	double Kp=0.15, Ki=0.02, Kd=0; // tKp(turning proportion) Kp (regular drive proportion) Ki()
+	double tKp=2.0, tKi=0, tKd=0;
 
 private:
 	ROBOT &Robot;

@@ -5,8 +5,8 @@ DRIVE::DRIVE(ROBOT &refRobot)
 	: Robot(refRobot),
 	  DrivePID(&Robot.State.DrivePIDInput, &Robot.State.DrivePIDOutput, &Robot.State.DrivePIDSetpoint, Kp, Ki, Kd, DIRECT),
 	  TurnPID(&Robot.State.Heading, &Robot.State.HeadingSpeed, &Robot.State.HeadingSetpoint, tKp, tKi, tKd, DIRECT),
-	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false, 50),
-	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false, 50)
+	  Left(Robot.DriveLeftPWM, Robot.DriveLeftDir, false, 30),
+	  Right(Robot.DriveRightPWM, Robot.DriveRightDir, false, 30)
 {
 }
 
@@ -46,8 +46,8 @@ void DRIVE::Task()
 		if (Robot.State.TurnPIDIsHeadingLock)
 		{
 			//This is the To function
-			Robot.State.DriveLeftSpeed = Robot.State.DrivePIDOutput + (Robot.State.HeadingSpeed * .25);
-			Robot.State.DriveRightSpeed = Robot.State.DrivePIDOutput - (Robot.State.HeadingSpeed * .25);
+			Robot.State.DriveLeftSpeed = Robot.State.DrivePIDOutput + (Robot.State.HeadingSpeed * .50);
+			Robot.State.DriveRightSpeed = Robot.State.DrivePIDOutput - (Robot.State.HeadingSpeed * .50);
 		}
 		else
 		{
@@ -118,6 +118,8 @@ void DRIVE::Task()
 			Robot.State.DriveIsRunningPID = false;
 			DrivePID.SetMode(MANUAL);
 			TurnPID.SetMode(MANUAL);
+			Robot.State.DriveRightSpeed = 0;
+			Robot.State.DriveLeftSpeed = 0;
 			
 		}
 	}

@@ -24,10 +24,11 @@ private:
 	ROBOT &Robot;
 	Servo HatServo;
 
-	static const int OpenPos = 20;
+	static const int OpenPos = 100;
 	static const int ClosedPos = 160;
 
 	static const int ReleaseDuration = 160;
+	static const int MoveDuration = 160;
 };
 
 #endif

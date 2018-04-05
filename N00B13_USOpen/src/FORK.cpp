@@ -3,7 +3,7 @@
 
 FORK::FORK(ROBOT &refRobot)
 	: Robot(refRobot),
-	ForkPID(&Robot.State.FlexSensor, &Robot.State.ForkSpeed, &Robot.State.ForkPIDSetpoint, Kp, Ki, Kd, DIRECT),
+	ForkPID(&Robot.State.FlexSensor, &Robot.State.ForkSpeedPID, &Robot.State.ForkPIDSetpoint, Kp, Ki, Kd, DIRECT),
 	ForkMotor(Robot.ForkPWM, Robot.ForkDir, true, 0)
 { 
  
@@ -29,12 +29,13 @@ void FORK::Task() {
 		{
 			Robot.State.ForkIsRunningPID = false; 
 			ForkPID.SetMode(MANUAL);
+			Robot.State.ForkSpeedPID = 0;
 		}
 	}
 }
 
 void FORK::Write() {
-	ForkMotor.SetMotorSpeed(Robot.State.ForkSpeed);
+	ForkMotor.SetMotorSpeed(Robot.State.ForkSpeed + Robot.State.ForkSpeedPID);
 }
 
 

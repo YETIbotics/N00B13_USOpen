@@ -77,10 +77,13 @@ void STATE::PrintLift()
 
 void STATE::ResetSpeeds()
 {
-	DriveLeftSpeed = 0;
-	DriveRightSpeed = 0;
-	LiftSpeed = 0;
-	ForkSpeed = 0;
+	if(!IsAutonomousRunning)
+	{
+		DriveLeftSpeed = 0;
+		DriveRightSpeed = 0;
+		LiftSpeed = 0;
+		ForkSpeed = 0;
+	}
 }
 
 void STATE::UpdateHeading(double newHeading)
