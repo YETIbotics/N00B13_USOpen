@@ -115,7 +115,7 @@ void AUTON::NextProgram()
 		Robot.State.AutonomousProgramNumber = 0;
 }
 
-void AUTON::Program1() //skills auton
+void AUTON::Program1() 
 {
 	switch (Robot.State.AutonomousTime)
 	{
@@ -173,84 +173,143 @@ void AUTON::Program3()
 {
 	switch (Robot.State.AutonomousTime)
 	{
+	
 	case 0:
+		//motros to speed
+		Robot.State.LiftSpeed = 125;
+		Robot.State.ForkSpeed = 255;
+		break;
+		case 700:
+		Robot.State.LiftSpeed = 0;
+		Robot.State.ForkSpeed = 0;
+		//motors to zero
+		break;
+	case 800:
+	Robot.Drive.To(1400, 250, 3000,10);
+	break;
+	
+	/*case 0:
 		Robot.Drive.SweepRelative(45, 200, 1000, false);
 		break;
 
 	case 1500:
 		Robot.Drive.SweepRelative(-45, 200, 1000, false);
-		break;
+		break;*/
 
 	case 4000:
 		Robot.State.AutonomousProgramNumber = 0;
 		break;
 	}
 }
-void AUTON::Program4()
+void AUTON::Program4()// match auton blue side
 {
 	switch (Robot.State.AutonomousTime)
 	{
 	case 0:
-		Robot.Fork.Down();
-		Robot.Drive.To(1042, 200, 1500);
+		//motros to speed
+		Robot.State.LiftSpeed = 140;
+		Robot.State.ForkSpeed = 255;
 		break;
 
-	case 1500:
+	case 800:
+		Robot.State.LiftSpeed = 0;
+		Robot.State.ForkSpeed = 0;
+		//motors to zero
+		break;
+
+	case 1000:
+		Robot.Drive.To(1420, 220, 3000, 10);
+		break;
+
+	case 3000:
 		Robot.Fork.Up();
 		break;
 
-	case 2000:
-		Robot.Drive.TurnRelative(175, 200, 1500);
+	case 3500:
+		Robot.Drive.To(-1200, 220, 3000, 10);
 		break;
 
-	case 1600:
-		Robot.Drive.To(2044, 200, 1500);
+	case 5600:
+		Robot.Drive.TurnAbsolute(-200, 150, 3000);
+		break;
+
+	case 8300:
+		Robot.Drive.To(550, 220, 3000, -200);
+		break;
+
+	case 10400:
+		Robot.Fork.Down();
+		break;
+	
+	case 10700:
+		Robot.Drive.To(-400, 200, 2500);
+		break;
+
+	case 13000:
+		Robot.Drive.TurnAbsolute(0,200,2500);
+		break;
+	
+	case 15000:
+		Robot.Drive.To(1200, 255, 1500, 0); //parked
+		break;
+
+	case 50000:
+		Robot.State.AutonomousProgramNumber = 0;
 		break;
 	}
 }
 void AUTON::Program5()
-{ //match Auton
+{ //match Auton red side
 	switch (Robot.State.AutonomousTime)
 	{
 	case 0:
-		Robot.Drive.To(1420, 175, 2000);
-		Robot.Lift.To(1000);
+		//motros to speed
+		Robot.State.LiftSpeed = 140;
+		Robot.State.ForkSpeed = 255;
+		break;
+		case 700:
+		Robot.State.LiftSpeed = 0;
+		Robot.State.ForkSpeed = 0;
+		//motors to zero
 		break;
 
-	case 2000:
-		Robot.Fork.Up();
+	case 500:
+		Robot.Drive.To(1475, 175, 2000,-10);
+		break;
+
+	case 2300:
+		Robot.Fork.Up(); //grabbing mogo
 		break;
 
 	case 2500:
-		Robot.Drive.To(-1200, 175, 2000);
+		Robot.Drive.To(-1200, 175, 2000,-10);
 		break;
 
 	case 4500:
-		Robot.Drive.TurnRelative(-215, 135, 2000);
+		Robot.Drive.TurnAbsolute(250, 165, 2000);
 		break;
 
 	case 6500:
-		Robot.Drive.To(400, 200, 1500);
+		Robot.Drive.To(800, 200, 1500,250);
 		break;
 
 	case 8500:
-		Robot.Fork.Down();
+		Robot.Fork.Down(); //scoring mogo
 		break;
 
 	case 9000:
 		Robot.Drive.To(-400, 200, 1500);
 		break;
 
-	case 11000:
-		Robot.Drive.TurnAbsolute(-286, 135, 2000);
-		Robot.Lift.To(520);
+	case 10000:
+		Robot.Drive.TurnAbsolute(0, 220, 3000);
 		break;
-
+		
 	case 13000:
-		Robot.Drive.To(-500, 200, 1500);
+		Robot.Drive.To(1200, 255, 1500, 10); //parked
 		break;
 
-	case 50000:
+	case 15000:
 		Robot.State.AutonomousProgramNumber = 0;
 		break;
 	}
@@ -259,25 +318,37 @@ void AUTON::Program6()
 { //Skills Auton
 	switch (Robot.State.AutonomousTime)
 	{
+	
 	case 0:
-		Robot.Drive.To(1420, 220, 3000, 10);
-		//Robot.Lift.To(500);
+		//motros to speed
+		Robot.State.LiftSpeed = 140;
+		Robot.State.ForkSpeed = 255;
 		break;
 
-	case 1900:
+	case 800:
+		Robot.State.LiftSpeed = 0;
+		Robot.State.ForkSpeed = 0;
+		//motors to zero
+		break;
+
+	case 1000:
+		Robot.Drive.To(1420, 220, 3000, 10);
+		break;
+
+	case 3000:
 		Robot.Fork.Up();
 		break;
 
-	case 2900:
-		Robot.Drive.To(-1250, 220, 3000, 10);
+	case 3500:
+		Robot.Drive.To(-1200, 220, 3000, 10);
 		break;
 
 	case 5600:
-		Robot.Drive.TurnAbsolute(-220, 150, 3000);
+		Robot.Drive.TurnAbsolute(-200, 150, 3000);
 		break;
 
 	case 8300:
-		Robot.Drive.To(500, 220, 3000);
+		Robot.Drive.To(550, 220, 3000, -200);
 		break;
 
 	case 10400:
@@ -293,7 +364,7 @@ void AUTON::Program6()
 		break;
 
 	case 15500:
-		Robot.Drive.To(600, 220, 3000);
+		Robot.Drive.To(700, 220, 3000, -65);
 		break;
 
 	case 18000:
@@ -301,23 +372,23 @@ void AUTON::Program6()
 		break;
 
 	case 19000:
-		Robot.Drive.To(-600, 220, 3000);
+		Robot.Drive.To(-700, 220, 3000);
 		break;
 
 	case 21500:
-		Robot.Drive.TurnAbsolute(-171, 150, 3000);
+		Robot.Drive.TurnAbsolute(-165, 150, 3000);
 		break;
 
 	case 23600:
-		Robot.Drive.To(570, 220, 3000);
+		Robot.Drive.To(650, 220, 3000, -165);
 		break;
 
 	case 26500:
-		Robot.Drive.TurnAbsolute(-240, 150, 3000);
+		Robot.Drive.TurnAbsolute(-235, 150, 3000);
 		break;
 
 	case 28800:
-		Robot.Drive.To(220, 220, 3000);
+		Robot.Drive.To(300, 220, 3000,-235);
 		break;
 
 	case 31400:
@@ -329,7 +400,7 @@ void AUTON::Program6()
 		break;
 
 	case 34900:
-		Robot.Drive.TurnAbsolute(-150, 200, 3000);
+		Robot.Drive.TurnAbsolute(-140, 200, 3000);
 		break;
 
 	case 37000:
@@ -337,24 +408,41 @@ void AUTON::Program6()
 		break;
 
 	case 40000:
-		Robot.Drive.TurnAbsolute(-45, 200, 3000);
+		Robot.Drive.TurnAbsolute(-40, 200, 3000);
 		break;
 
 	case 43000:
-		Robot.Drive.To(675, 200, 3000);
+		Robot.Drive.To(975, 200, 3000,-40);
 		break;
 
 	case 46000:
-		Robot.Fork.Up();
+		Robot.Fork.Up();  //grabbing the second red mogo
 		break;
 
 	case 49000:
-		Robot.Drive.TurnAbsolute(-225, 150, 3000);
+		Robot.Drive.TurnAbsolute(-230, 150, 3000);
 		break;
 
 	case 52000:
-		Robot.Drive.To(675, 220, 3000);
+		Robot.Drive.To(1200, 220, 3000);
 		break;
+
+	case 54500:
+		Robot.Fork.Down();
+		break;
+
+	case 55000:
+		Robot.Drive.To(-500, 220, 3000);
+		break;
+
+	case 58000:
+		Robot.Drive.TurnAbsolute(-110, 200, 3000);
+		break;
+
+	case 60000:
+		Robot.Drive.To(1000, 250, 3000);
+		break;
+
 
 	case 100000:
 		Robot.State.AutonomousProgramNumber = 0;
@@ -385,7 +473,7 @@ void AUTON::Program7()
 			Robot.Drive.TurnAbsolute(360, 200, 3000);
 			break;
 
-		case 100000:
+		case 2000:
 			Robot.State.AutonomousProgramNumber = 0;
 			break;
 	}
@@ -427,13 +515,21 @@ void AUTON::Program11()
 		break;
 	}
 }
-void AUTON::Program12()
+void AUTON::Program12() //deploy auton
 {
 	switch (Robot.State.AutonomousTime)
 	{
 	case 0:
-		Robot.State.AutonomousProgramNumber = 0;
+		Robot.State.LiftSpeed = 125;
+		Robot.State.ForkSpeed = 255;
 		break;
+
+	case 1000:
+			Robot.State.LiftSpeed = 0;
+			Robot.State.ForkSpeed = 0;
+			Robot.State.AutonomousProgramNumber = 0;
+			break;
+	
 	}
 }
 void AUTON::Program13()
